@@ -1,0 +1,925 @@
+/* ==========================================================================
+   ZACK ELECTRIC ENTERPRISE SAAS DESIGN SYSTEM
+   ========================================================================== */
+
+:root {
+    --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --bg-dark: #090d16;
+    --bg-surface: #111827;
+    --bg-card: #1f2937;
+    --border-subtle: #374151;
+    --accent-blue: #3b82f6;
+    --accent-blue-hover: #2563eb;
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-inter);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* NAVBAR ENTERPRISE */
+.top-navbar {
+    height: 60px;
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-text h1 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #10b981;
+}
+
+.doc-mode-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.selector-label {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.btn-group-pill {
+    display: flex;
+    background: var(--bg-dark);
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+}
+
+.pill-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: var(--font-inter);
+}
+
+.pill-btn.active {
+    background: var(--accent-blue);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.nav-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-preview-toggle {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+
+.btn-preview-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #4b5563;
+}
+
+.btn-print-main {
+    background: var(--accent-blue);
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+
+.btn-print-main:hover {
+    background: var(--accent-blue-hover);
+}
+
+/* AREA WORKSPACE */
+.workspace-area {
+    flex: 1;
+    padding: 32px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ==========================================================================
+   STEPPER NAVIGATION FIX (PERFECT CIRCLE NUMBER BADGE & VERTICAL TEXT)
+   ========================================================================== */
+
+.stepper-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 880px;
+    margin-bottom: 24px;
+    background: var(--bg-surface);
+    padding: 16px 28px;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+}
+
+.step-item.active {
+    opacity: 1;
+}
+
+/* LINGKARAN NOMOR BULAT PRESISI & MINIMALIS */
+.step-num {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;    /* Mencegah tergepengkan oleh flexbox */
+    min-height: 32px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    box-sizing: border-box;
+    flex-shrink: 0;     /* Memastikan ukuran tidak berubah sama sekali */
+    transition: all 0.2s ease;
+}
+
+/* STATE AKTIF DENGAN SOFT GLOW BLUE */
+.step-item.active .step-num {
+    background: var(--accent-blue);
+    color: #ffffff;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.35);
+}
+
+/* PEMBUNGKUS TEKS JUDUL & DESKRIPSI (VERTIKAL) */
+.step-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.step-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.step-desc {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    line-height: 1.1;
+}
+
+.step-connector {
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+    margin: 0 16px;
+    max-width: 60px;
+}
+
+/* CARDS FORM */
+.form-step-content {
+    display: none;
+    width: 100%;
+    max-width: 860px;
+}
+
+.form-step-content.active {
+    display: block;
+}
+
+.card-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 16px 24px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent-blue);
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.card-body {
+    padding: 24px;
+}
+
+.card-footer {
+    padding: 16px 24px;
+    background: rgba(0, 0, 0, 0.15);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card-footer.space-between {
+    justify-content: space-between;
+}
+
+/* INPUT CONTROLS */
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+    padding: 9px 12px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    outline: none;
+    font-family: var(--font-inter);
+    transition: all 0.15s ease;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus, 
+.form-group select:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.input-readonly {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    color: var(--accent-blue) !important;
+    font-weight: 600;
+}
+
+.divider {
+    border: none;
+    border-top: 1px dashed var(--border-subtle);
+    margin: 8px 0 20px 0;
+}
+
+/* TABEL RINCIAN BARANG */
+.table-wrapper-large {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    background-color: var(--bg-dark);
+    margin-bottom: 16px;
+}
+
+.item-table-input {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+
+.item-table-input th {
+    background-color: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.item-table-input td {
+    padding: 8px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.item-table-input textarea, 
+.item-table-input input {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-inter);
+}
+
+.btn-delete-icon {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.btn-delete-icon:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+.btn-secondary {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #374151;
+}
+
+.btn-step-nav {
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+
+.btn-step-nav.next {
+    background: var(--accent-blue);
+    color: #fff;
+}
+
+.btn-step-nav.next:hover {
+    background: var(--accent-blue-hover);
+}
+
+.btn-step-nav.prev {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+}
+
+.btn-step-nav.prev:hover {
+    background: #374151;
+    color: #fff;
+}
+
+.btn-primary-finish {
+    background: #10b981;
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+
+.btn-primary-finish:hover {
+    background: #059669;
+}
+
+.btn-text-action {
+    background: transparent;
+    border: none;
+    color: var(--accent-blue);
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-text-action:hover {
+    text-decoration: underline;
+}
+
+/* DRAWER LIVE PREVIEW */
+.preview-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 65vw;
+    min-width: 850px;
+    height: 100vh;
+    background: #1e293b;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-drawer.open {
+    right: 0;
+}
+
+.drawer-header {
+    height: 60px;
+    background: var(--bg-surface);
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.drawer-header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent-blue);
+}
+
+.drawer-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+}
+
+.btn-close-drawer {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.btn-close-drawer:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+.drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 20px;
+    background-color: #334155;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* KERTAS A4 UNTUK PREVIEW LAYAR */
+.a4-page {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 20mm;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-sizing: border-box;
+}
+
+/* MODAL STYLING */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    width: 460px;
+    max-width: 90vw;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-footer {
+    padding: 14px 20px;
+    background: rgba(0, 0, 0, 0.15);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+}
+
+.btn-danger {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   PRINT STYLESHEET (PERBAIKAN PRINT KERTAS KOSONG)
+   ========================================================================== */
+
+@media print {
+    /* 1. Sembunyikan semua elemen UI web yang ber-class no-print */
+    .no-print {
+        display: none !important;
+    }
+
+    /* 2. Reset Body & Container Aplikasi untuk Cetak */
+    html, body, .app-container {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        overflow: visible !important;
+    }
+
+    /* 3. Paksa Drawer & Print Area Lepas dari Fixed Positioning */
+    .preview-drawer {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        background: #ffffff !important;
+        box-shadow: none !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+
+    .drawer-body, 
+    .print-area {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #ffffff !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+
+    /* 4. Formatting Lembar A4 Pas Cetak */
+    .a4-page {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: block !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+
+    /* 5. Set Ukuran Kertas Printer */
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
+
+    /* 6. Memaksa Grafis (Logo/Cap/Warna) Tetap Tercetak */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* ==========================================================================
+   WORKSPACE UI & INPUT FIX
+   ========================================================================== */
+
+.top-navbar {
+    height: 60px;
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-text h1 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+}
+
+.brand-subtext {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 2px;
+}
+
+/* AREA WORKSPACE FORM */
+.workspace-area {
+    flex: 1;
+    padding: 32px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* CARDS FORM */
+.form-step-content {
+    display: none;
+    width: 100%;
+    max-width: 880px;
+}
+
+.form-step-content.active {
+    display: block;
+}
+
+.card-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 16px 24px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent-blue);
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.card-body {
+    padding: 24px;
+}
+
+/* PERBAIKAN TABEL RINCIAN BARANG (PEMPERBAIKI TEXTAREA NYANGKUT/POTONG) */
+.table-wrapper-large {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    background-color: var(--bg-dark);
+    margin-bottom: 16px;
+}
+
+.item-table-input {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+
+.item-table-input th {
+    background-color: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.item-table-input td {
+    padding: 10px 12px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Dibuat auto-height & flexible agar tidak pernah kepotong seperti di gambar */
+.item-table-input textarea {
+    background-color: var(--bg-surface) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-primary) !important;
+    border-radius: 6px !important;
+    padding: 10px 12px !important;
+    font-size: 0.85rem !important;
+    line-height: 1.5 !important;
+    
+    /* LEBAR TERKUNCI 100% */
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    
+    /* TINGGI SIFATNYA DINAMIS */
+    min-height: 42px !important;
+    max-height: none !important;
+    
+    resize: none !important;
+    overflow: hidden !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-family: var(--font-inter) !important;
+    display: block !important;
+}
+
+.item-table-input input {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-inter);
+}
+
+.item-table-input textarea:focus,
+.item-table-input input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    outline: none;
+}

@@ -1,0 +1,158 @@
+/* ==========================================
+   STYLING KHUSUS QUOTATION (A4 PRINT)
+   ========================================== */
+
+.quotation-page {
+  font-family: 'Tahoma', Geneva, Verdana, sans-serif;
+  color: #000;
+  line-height: 1.45;
+}
+
+/* HEADER METADATA QUOTATION */
+.quotation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 20px;
+  font-size: 0.88rem;
+}
+
+.quotation-header-left {
+  width: 58%;
+}
+
+.quotation-header-right {
+  width: 38%;
+  text-align: left;
+}
+
+/* SPASER AGAR BARIS COMPANY TURUN SEJAJAR DENGAN FROM */
+.quotation-header-spacer {
+  height: 32px;
+}
+
+.quotation-meta-table {
+  width: 100%;
+  border-collapse: collapse;
+  line-height: 1.45;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.quotation-meta-table td {
+  padding: 1px 0;
+}
+
+/* TITLE QUOTATION (TRAJAN PRO) */
+.quotation-title-box {
+  text-align: center;
+  margin-bottom: 8px;
+  padding-right: 20px;
+}
+
+.quotation-title-text {
+  font-family: 'Trajan Pro', 'Trajan', 'Times New Roman', serif;
+  font-size: 1.45rem;
+  color: #1e3a8a;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+/* FROM ZACK ELECTRIC (BELL MT) */
+.quotation-from-brand {
+  font-family: 'Bell MT', 'Georgia', serif;
+  color: #1e3a8a;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* KALIMAT PEMBUKA & PENUTUP */
+.quotation-intro-text {
+  margin: 30px 0 15px 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.quotation-outro-text {
+  margin-top: 25px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  font-family: 'Tahoma', sans-serif;
+}
+
+/* TABEL PENAWARAN HARGA */
+.quotation-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #000;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.quotation-table th,
+.quotation-table td {
+  border: 1.5px solid #000;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+}
+
+.quotation-table th {
+  background-color: #fff;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* FOOTER TABEL QUOTATION (TANPA BORDER DI SISI KIRI TOTAL) */
+.quotation-table tfoot td {
+  border: none;
+  padding: 6px 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.quotation-table tfoot td.total-cell {
+  border: 2px solid #000;
+  background-color: #fff;
+}
+
+.quotation-item-title {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: bold;
+}
+
+.quotation-details-list {
+  margin: 6px 0 0 15px;
+  padding: 0;
+  list-style-type: disc;
+  font-size: 0.8rem;
+  color: #000;
+}
+
+.quotation-details-list li {
+  margin-bottom: 2px;
+}
+
+/* OTORISASI TANDA TANGAN (BOOKMAN OLD STYLE) */
+.quotation-signature-area {
+  margin-top: 20px;
+}
+
+.quotation-signature-box {
+  float: left;
+  text-align: left;
+  font-family: 'Bookman Old Style', 'Bookman', serif;
+}
+
+.quotation-sign-brand {
+  color: #0000ff;
+  font-size: 1rem;
+  display: block;
+  margin-top: 2px;
+  font-weight: bold;
+}
+
+.quotation-sign-name {
+  letter-spacing: 2px;
+  font-size: 0.95rem;
+  font-weight: bold;
+}
