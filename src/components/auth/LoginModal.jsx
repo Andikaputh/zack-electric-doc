@@ -47,7 +47,7 @@ export default function LoginModal({ isOpen }) {
 
         <form onSubmit={handleSendMagicLink}>
           <div className="form-group" style={{ textAlign: 'left', marginBottom: '16px' }}>
-            <label htmlFor="authEmail">Email Orang Tua</label>
+            <label htmlFor="authEmail">Email</label>
             <input
               type="email"
               id="authEmail"
