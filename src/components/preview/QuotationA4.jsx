@@ -71,14 +71,14 @@ export default function QuotationA4({ formData }) {
         </div>
       </div>
 
-      {/* HEADER METADATA PRESISI 1:1 DENGAN ACUAN EXCEL */}
+      {/* HEADER METADATA PRESISI 1:1 DENGAN SPACING SERAGAM */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
         
-        {/* KOLOM KIRI: TO, COMPANY ADDRES, CONTACT, PHONE */}
+        {/* KOLOM KIRI: TO, COMPANY, ADDRES, CONTACT, PHONE */}
         <div style={{ flex: '1', paddingRight: '20px' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10pt', fontFamily: 'Tahoma, sans-serif' }}>
             <tbody>
-              {/* BARIS TO SEJAJAR 1:1 DENGAN BARIS FROM */}
+              {/* BARIS TO */}
               <tr>
                 <td style={{ width: '85px', verticalAlign: 'top', padding: '2px 0' }}>To</td>
                 <td style={{ width: '15px', verticalAlign: 'top', padding: '2px 0', textAlign: 'center' }}>:</td>
@@ -87,21 +87,22 @@ export default function QuotationA4({ formData }) {
                 </td>
               </tr>
 
-              {/* LABEL COMPANY ADDRES ATAS-BAWAH (TANPA BARIS COMPANY TERSENDIRI) */}
+              {/* BARIS COMPANY & ADDRES DIPISAH AGAR SPACING SAMA PERSIS */}
               <tr>
-                <td style={{ verticalAlign: 'top', padding: '2px 0', lineHeight: '1.2' }}>
-                  Company<br />Addres
-                </td>
-                <td style={{ verticalAlign: 'top', padding: '2px 0', textAlign: 'center' }}>:</td>
-                <td style={{ verticalAlign: 'top', padding: '2px 0' }}>{formData.address}</td>
+                <td style={{ verticalAlign: 'top', padding: '2px 0' }}>Company</td>
+                <td rowSpan={2} style={{ width: '15px', verticalAlign: 'top', padding: '2px 0', textAlign: 'center' }}>:</td>
+                <td rowSpan={2} style={{ verticalAlign: 'top', padding: '2px 0' }}>{formData.address}</td>
+              </tr>
+              <tr>
+                <td style={{ verticalAlign: 'top', padding: '2px 0' }}>Addres</td>
               </tr>
 
               {/* BARIS CONTACT & PHONE */}
               {formData.contact && (
                 <tr>
-                  <td style={{ verticalAlign: 'top', padding: '6px 0 2px 0' }}>Contact</td>
-                  <td style={{ verticalAlign: 'top', padding: '6px 0 2px 0', textAlign: 'center' }}>:</td>
-                  <td style={{ verticalAlign: 'top', padding: '6px 0 2px 0', fontWeight: 'bold' }}>
+                  <td style={{ verticalAlign: 'top', padding: '2px 0' }}>Contact</td>
+                  <td style={{ verticalAlign: 'top', padding: '2px 0', textAlign: 'center' }}>:</td>
+                  <td style={{ verticalAlign: 'top', padding: '2px 0', fontWeight: 'bold' }}>
                     {formData.contact}
                   </td>
                 </tr>
@@ -119,7 +120,6 @@ export default function QuotationA4({ formData }) {
         <div style={{ width: '270px' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10pt', fontFamily: 'Tahoma, sans-serif' }}>
             <tbody>
-              {/* BARIS FROM SEJAJAR 1:1 DENGAN BARIS TO */}
               <tr>
                 <td style={{ width: '70px', verticalAlign: 'top', padding: '2px 0' }}>From</td>
                 <td style={{ width: '15px', verticalAlign: 'top', padding: '2px 0', textAlign: 'center' }}>:</td>
