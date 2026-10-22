@@ -1,11 +1,37 @@
-import { useState } from 'react';
-import { FileText, Printer, X, FileSpreadsheet } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import {
+  FileText,
+  Printer,
+  X,
+  FileSpreadsheet,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react';
 import InvoiceA4 from './InvoiceA4';
 import KwitansiA4 from './KwitansiA4';
 import QuotationA4 from './QuotationA4';
+import PaperScale from './PaperScale';
 
 export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, onPrint }) {
   const [paperSize, setPaperSize] = useState('a4'); // 'a4' | 'letter' | 'f4'
+  const [zoom, setZoom] = useState(1); // 1 = fit to width
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -28,61 +54,106 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
     }, 1000);
   };
 
+  const zoomIn = () => setZoom((prev) => Math.min(3, Number((prev + 0.25).toFixed(2))));
+  const zoomOut = () => setZoom((prev) => Math.max(1, Number((prev - 0.25).toFixed(2))));
+
   return (
     <aside className={`preview-drawer ${isOpen ? 'open' : ''}`} id="previewDrawer">
-      <div className="drawer-header no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div className="drawer-header-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div className="drawer-header no-print">
+        <div className="drawer-header-title">
           <FileText size={18} />
           <h3>Live Preview Hasil Dokumen</h3>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div className="drawer-controls">
           {/* DROPDOWN PILIHAN UKURAN KERTAS */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', background: '#1f2937', padding: '4px 8px', borderRadius: '6px' }}>
-            <FileSpreadsheet size={15} style={{ color: '#3b82f6' }} />
-            <span>Kertas:</span>
+          <div className="paper-size-control">
+            <FileSpreadsheet size={15} className="paper-size-icon" />
             <select
               value={paperSize}
               onChange={(e) => setPaperSize(e.target.value)}
-              style={{
-                background: '#111827',
-                color: '#fff',
-                border: '1px solid #374151',
-                borderRadius: '4px',
-                padding: '2px 6px',
-                fontSize: '0.8rem',
-                cursor: 'pointer'
-              }}
+              aria-label="Ukuran kertas"
+              title="Pilih ukuran kertas"
             >
-              <option value="a4">A4 (210 x 297 mm)</option>
-              <option value="letter">Letter (215.9 x 279.4 mm)</option>
-              <option value="f4">F4 / Folio (215 x 330 mm)</option>
+              <option value="a4">A4</option>
+              <option value="letter">Letter</option>
+              <option value="f4">F4 / Folio</option>
             </select>
           </div>
 
-          <button type="button" className="btn-print-main" onClick={handlePrintDocument} style={{ padding: '6px 12px', fontSize: '0.78rem' }}>
-            <Printer size={14} /> Cetak Dokumen
-          </button>
-          <button type="button" className="btn-close-drawer" onClick={onClose}>
-            <X size={14} /> Tutup
+          {/* ZOOM PREVIEW */}
+          <div className="zoom-control" role="group" aria-label="Zoom preview">
+            <button
+              type="button"
+              onClick={zoomOut}
+              disabled={zoom <= 1}
+              aria-label="Perkecil preview"
+              title="Perkecil preview"
+            >
+              <ZoomOut size={15} />
+            </button>
+            <button
+              type="button"
+              className="zoom-level"
+              onClick={() => setZoom(1)}
+              title="Kembalikan ke ukuran pas layar"
+            >
+              {Math.round(zoom * 100)}%
+            </button>
+            <button
+              type="button"
+              onClick={zoomIn}
+              disabled={zoom >= 3}
+              aria-label="Perbesar preview"
+              title="Perbesar preview"
+            >
+              <ZoomIn size={15} />
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className="btn-print-main drawer-print"
+            onClick={handlePrintDocument}
+            title="Cetak dokumen"
+          >
+            <Printer size={14} />
+            <span>Cetak</span>
           </button>
         </div>
+
+        <button
+          type="button"
+          className="btn-close-drawer"
+          onClick={onClose}
+          aria-label="Tutup preview"
+          title="Tutup preview"
+        >
+          <X size={14} />
+          <span>Tutup</span>
+        </button>
       </div>
 
       {/* BODY PREVIEW DENGAN CLASS DINAMIS SESUAI UKURAN KERTAS */}
       <div className={`drawer-body print-area paper-${paperSize}`}>
         {docMode === 'quotation' && (
-          <QuotationA4 formData={formData} />
+          <PaperScale zoom={zoom}>
+            <QuotationA4 formData={formData} />
+          </PaperScale>
         )}
 
         {(docMode === 'both' || docMode === 'invoice') && (
-          <InvoiceA4 formData={formData} />
+          <PaperScale zoom={zoom}>
+            <InvoiceA4 formData={formData} />
+          </PaperScale>
         )}
 
-        {docMode === 'both' && <div className="page-break"></div>}
+        {docMode === 'both' && <div className="page-break" />}
 
         {(docMode === 'both' || docMode === 'kwitansi') && (
-          <KwitansiA4 formData={formData} />
+          <PaperScale zoom={zoom}>
+            <KwitansiA4 formData={formData} />
+          </PaperScale>
         )}
       </div>
     </aside>

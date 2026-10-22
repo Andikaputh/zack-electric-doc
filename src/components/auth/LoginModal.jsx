@@ -34,7 +34,7 @@ export default function LoginModal({ isOpen }) {
 
   return (
     <div className="modal-overlay" style={{ display: 'flex', zIndex: 9999, background: 'rgba(9, 13, 22, 0.95)', backdropFilter: 'blur(12px)' }}>
-      <div className="modal-card" style={{ width: '400px', textAlign: 'center', padding: '28px' }}>
+      <div className="modal-card login-modal-card" style={{ width: '400px', textAlign: 'center', padding: '28px' }}>
         <div style={{ marginBottom: '20px' }}>
           <div style={{ width: '48px', height: '48px', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-blue)', borderRadius: '12px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
             <Lock size={24} />

@@ -1,5 +1,12 @@
 import { Eye, Printer } from 'lucide-react';
 
+const DOC_MODES = [
+  { value: 'both', label: 'Invoice & Kwitansi', short: 'Invoice + Kwitansi' },
+  { value: 'quotation', label: 'Quotation (Penawaran)', short: 'Quotation' },
+  { value: 'invoice', label: 'Invoice Saja', short: 'Invoice' },
+  { value: 'kwitansi', label: 'Kwitansi Saja', short: 'Kwitansi' },
+];
+
 export default function Navbar({ docMode, setDocMode, onTogglePreview, onPrint }) {
   return (
     <header className="top-navbar no-print">
@@ -13,47 +20,44 @@ export default function Navbar({ docMode, setDocMode, onTogglePreview, onPrint }
       {/* MODE DOKUMEN CETAK SWITCHER */}
       <div className="doc-mode-selector">
         <span className="selector-label">Format Cetak:</span>
-        <div className="btn-group-pill">
-          <button
-            type="button"
-            className={`pill-btn ${docMode === 'both' ? 'active' : ''}`}
-            onClick={() => setDocMode('both')}
-          >
-            Invoice & Kwitansi
-          </button>
-          <button
-            type="button"
-            className={`pill-btn ${docMode === 'quotation' ? 'active' : ''}`}
-            onClick={() => setDocMode('quotation')}
-          >
-            Quotation (Penawaran)
-          </button>
-          <button
-            type="button"
-            className={`pill-btn ${docMode === 'invoice' ? 'active' : ''}`}
-            onClick={() => setDocMode('invoice')}
-          >
-            Invoice Saja
-          </button>
-          <button
-            type="button"
-            className={`pill-btn ${docMode === 'kwitansi' ? 'active' : ''}`}
-            onClick={() => setDocMode('kwitansi')}
-          >
-            Kwitansi Saja
-          </button>
+        <div className="btn-group-pill" role="group" aria-label="Pilih format dokumen">
+          {DOC_MODES.map((mode) => (
+            <button
+              key={mode.value}
+              type="button"
+              className={`pill-btn ${docMode === mode.value ? 'active' : ''}`}
+              onClick={() => setDocMode(mode.value)}
+              aria-pressed={docMode === mode.value}
+              title={mode.label}
+            >
+              <span className="pill-label-full">{mode.label}</span>
+              <span className="pill-label-short">{mode.short}</span>
+            </button>
+          ))}
         </div>
       </div>
 
       {/* TOMBOL ACTION PREVIEW & PRINT */}
       <div className="nav-actions">
-        <button type="button" className="btn-preview-toggle" onClick={onTogglePreview}>
+        <button
+          type="button"
+          className="btn-preview-toggle"
+          onClick={onTogglePreview}
+          title="Buka live preview A4"
+          aria-label="Buka live preview A4"
+        >
           <Eye size={16} />
           <span>Live Preview A4</span>
         </button>
-        <button type="button" className="btn-print-main" onClick={onPrint}>
+        <button
+          type="button"
+          className="btn-print-main"
+          onClick={onPrint}
+          title="Cetak atau export PDF"
+          aria-label="Cetak atau export PDF"
+        >
           <Printer size={16} />
-          Cetak / Export PDF
+          <span>Cetak / Export PDF</span>
         </button>
       </div>
     </header>

@@ -597,8 +597,8 @@ body {
 .a4-page {
     background-color: #ffffff !important;
     color: #000000 !important;
-    width: 210mm;
-    min-height: 297mm;
+    width: var(--paper-width);
+    min-height: var(--paper-height);
     padding: 15mm 20mm;
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     box-sizing: border-box;

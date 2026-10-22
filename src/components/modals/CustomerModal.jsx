@@ -1,32 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Plus, Trash2, Edit3, Save, UserCheck, PlusCircle } from 'lucide-react';
 import { getCustomerDatabase, saveCustomerDatabase } from '../../utils/customerDb';
 
+const emptyForm = {
+  id: '',
+  name: '',
+  code: '',
+  address: '',
+  phone: '',
+  contact: '',
+};
+
 export default function CustomerModal({ isOpen, onClose, onSelectCustomer }) {
-  const [customers, setCustomers] = useState([]);
+  if (!isOpen) return null;
+
+  return <CustomerModalContent onClose={onClose} onSelectCustomer={onSelectCustomer} />;
+}
+
+function CustomerModalContent({ onClose, onSelectCustomer }) {
+  const [customers, setCustomers] = useState(() => getCustomerDatabase());
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({
-    id: '',
-    name: '',
-    code: '',
-    address: '',
-    phone: '',
-    contact: '',
-  });
+  const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
-    if (isOpen) {
-      setCustomers(getCustomerDatabase());
-      resetForm();
-    }
-  }, [isOpen]);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
   const resetForm = () => {
     setEditingId(null);
-    setForm({ id: '', name: '', code: '', address: '', phone: '', contact: '' });
+    setForm(emptyForm);
   };
-
-  if (!isOpen) return null;
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -35,7 +49,7 @@ export default function CustomerModal({ isOpen, onClose, onSelectCustomer }) {
       return;
     }
 
-    let updatedDb = [];
+    let updatedDb;
     if (editingId) {
       updatedDb = customers.map((c) => (c.id === editingId ? { ...form, id: editingId } : c));
     } else {
@@ -70,20 +84,20 @@ export default function CustomerModal({ isOpen, onClose, onSelectCustomer }) {
 
   return (
     <div className="modal-overlay" style={modalOverlayStyle}>
-      <div className="modal-card" style={modalCardStyle}>
+      <div className="modal-card customer-modal-card" style={modalCardStyle}>
         <div className="modal-header" style={modalHeaderStyle}>
           <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600 }}>Kelola Template Pelanggan</h3>
-          <button type="button" onClick={onClose} style={closeBtnStyle}><X size={18} /></button>
+          <button type="button" onClick={onClose} style={closeBtnStyle} aria-label="Tutup"><X size={18} /></button>
         </div>
 
-        <div className="modal-body" style={{ padding: '20px' }}>
+        <div className="modal-body customer-modal-body" style={{ padding: '20px' }}>
           {/* FORM TAMBAH / EDIT TEMPLATE */}
-          <form onSubmit={handleSave} style={{ marginBottom: '20px', background: '#111827', padding: '16px', borderRadius: '8px', border: '1px solid #374151' }}>
+          <form onSubmit={handleSave} className="customer-form" style={{ marginBottom: '20px', background: '#111827', padding: '16px', borderRadius: '8px', border: '1px solid #374151' }}>
             <h4 style={{ margin: '0 0 12px 0', color: '#3b82f6', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
               {editingId ? <Edit3 size={15} /> : <PlusCircle size={15} />}
               {editingId ? 'Edit Template Pelanggan' : 'Tambah Template Baru'}
             </h4>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+            <div className="customer-form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
               <div>
                 <label style={labelStyle}>Nama Perusahaan / Instansi *</label>
                 <input
@@ -108,7 +122,7 @@ export default function CustomerModal({ isOpen, onClose, onSelectCustomer }) {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+            <div className="customer-form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
               <div>
                 <label style={labelStyle}>Alamat Pelanggan</label>
                 <input
@@ -142,7 +156,7 @@ export default function CustomerModal({ isOpen, onClose, onSelectCustomer }) {
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+            <div className="customer-form-actions" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
               {editingId && (
                 <button type="button" onClick={resetForm} style={btnSecondaryStyle}>Batal Edit</button>
               )}
@@ -155,15 +169,15 @@ export default function CustomerModal({ isOpen, onClose, onSelectCustomer }) {
 
           {/* DAFTAR TEMPLATE PELANGGAN */}
           <h4 style={{ margin: '0 0 10px 0', fontSize: '0.82rem', color: '#9ca3af', fontWeight: 600 }}>Daftar Preset Tersimpan:</h4>
-          <div style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div className="customer-list" style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {customers.map((cust) => (
-              <div key={cust.id} style={customerRowStyle}>
+              <div key={cust.id} className="customer-row" style={customerRowStyle}>
                 <div>
                   <strong style={{ color: '#f9fafb', fontSize: '0.88rem' }}>{cust.name}</strong>
                   <span style={{ fontSize: '0.75rem', color: '#3b82f6', marginLeft: '8px', fontWeight: 'bold' }}>[{cust.code}]</span>
                   <div style={{ fontSize: '0.78rem', color: '#9ca3af' }}>{cust.address || 'Tanpa Alamat'}</div>
                 </div>
-                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                <div className="customer-row-actions" style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                   <button type="button" onClick={() => handleSelectAndClose(cust)} style={btnUseStyle} title="Gunakan Template">
                     <UserCheck size={14} /> Pilih
                   </button>

@@ -104,10 +104,11 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
     const hasSubPrices = subDetails.some((d) => typeof d === 'object' && (Number(d.price) || 0) > 0);
 
     return (
-      <tr key={item.id} style={{ verticalAlign: 'top' }}>
-        <td>
+      <tr key={item.id} className="item-row">
+        <td className="item-cell item-desc-cell">
           {/* KATEGORI / HEADING 1 — BISA DIPINDAH ANTAR SECTION */}
           <div
+            className="item-category-picker"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -158,14 +159,15 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
           />
 
           {/* SUBHEADING / RINCIAN SUB-KOMPONEN */}
-          <div style={{ marginTop: '8px', paddingLeft: '8px', borderLeft: '2px solid #3b82f6' }}>
+          <div className="sub-list" style={{ marginTop: '8px', paddingLeft: '8px', borderLeft: '2px solid #3b82f6' }}>
             {subDetails.map((d, dIdx) => {
               const detailObj = typeof d === 'string' ? { name: d, qty: 1, unit: 'Buah', price: 0 } : d;
 
               return (
-                <div key={dIdx} style={{ display: 'flex', gap: '6px', marginBottom: '6px', alignItems: 'center' }}>
+                <div key={dIdx} className="sub-row" style={{ display: 'flex', gap: '6px', marginBottom: '6px', alignItems: 'center' }}>
                   <input
                     type="text"
+                    className="sub-input sub-name"
                     placeholder="Nama sub-komponen..."
                     value={detailObj.name || ''}
                     onChange={(e) => handleSubDetailChange(item.id, dIdx, 'name', e.target.value)}
@@ -173,6 +175,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
                   />
                   <input
                     type="number"
+                    className="sub-input sub-qty"
                     placeholder="QTY"
                     min={1}
                     value={detailObj.qty || 1}
@@ -181,6 +184,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
                   />
                   <input
                     type="text"
+                    className="sub-input sub-unit"
                     placeholder="Satuan"
                     value={detailObj.unit || 'Buah'}
                     onChange={(e) => handleSubDetailChange(item.id, dIdx, 'unit', e.target.value)}
@@ -190,6 +194,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
                   {/* INPUT HARGA SUB DENGAN FORMATTER TITIK */}
                   <input
                     type="text"
+                    className="sub-input sub-price"
                     placeholder="Harga Sub (Rp)"
                     value={formatNumberWithDots(detailObj.price)}
                     onChange={(e) => {
@@ -200,7 +205,10 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
                   />
                   <button
                     type="button"
+                    className="sub-remove"
                     onClick={() => removeSubDetail(item.id, dIdx)}
+                    aria-label="Hapus sub-komponen"
+                    title="Hapus sub-komponen"
                     style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '2px' }}
                   >
                     <X size={14} />
@@ -209,9 +217,10 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
               );
             })}
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
+            <div className="sub-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
               <button
                 type="button"
+                className="btn-add-sub"
                 onClick={() => addSubDetail(item.id)}
                 style={{
                   background: 'transparent',
@@ -229,7 +238,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
               </button>
 
               {hasSubPrices && (
-                <label style={{ fontSize: '0.75rem', color: '#3b82f6', display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                <label className="sub-price-toggle" style={{ fontSize: '0.75rem', color: '#3b82f6', display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
                   <input
                     type="checkbox"
                     checked={!!item.showSubPrices}
@@ -243,7 +252,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
           </div>
         </td>
 
-        <td>
+        <td className="item-cell item-qty-cell" data-label="QTY">
           <input
             type="number"
             min={1}
@@ -252,7 +261,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
           />
         </td>
 
-        <td>
+        <td className="item-cell item-unit-cell" data-label="Satuan">
           <input
             type="text"
             placeholder="Meter/Lot/Set/Buah"
@@ -262,7 +271,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
         </td>
 
         {/* INPUT HARGA SATUAN UTAMA DENGAN FORMATTER TITIK */}
-        <td>
+        <td className="item-cell item-price-cell" data-label="Harga Satuan (Rp)">
           <input
             type="text"
             disabled={hasSubPrices}
@@ -281,12 +290,14 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
           )}
         </td>
 
-        <td style={{ textAlign: 'center' }}>
+        <td className="item-cell item-delete-cell" style={{ textAlign: 'center' }}>
           <button
             type="button"
             className="btn-danger-icon"
             onClick={() => removeItemRow(item.id)}
             disabled={formData.items.length === 1}
+            aria-label="Hapus item"
+            title="Hapus item"
           >
             <Trash2 size={16} />
           </button>
@@ -347,7 +358,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
                   {/* HEADING 2 + SUBHEADING */}
                   {sectionItems.map((item) => renderItemRow(item))}
 
-                  <tr>
+                  <tr className="item-section-add-row">
                     <td colSpan={5} className="item-section-add-cell">
                       <button
                         type="button"
