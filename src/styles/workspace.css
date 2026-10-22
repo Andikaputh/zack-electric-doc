@@ -923,3 +923,102 @@ body {
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     outline: none;
 }
+/* ============================================================
+   HIERARKI FORM ITEM: HEADING 1 / HEADING 2 / SUBHEADING
+   ============================================================ */
+.item-hierarchy-hint {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: rgba(59, 130, 246, 0.06);
+    border: 1px dashed rgba(59, 130, 246, 0.28);
+    border-radius: 8px;
+}
+
+.item-hierarchy-hint b {
+    color: var(--text-primary);
+}
+
+.item-table-input .item-section-row td {
+    background: rgba(59, 130, 246, 0.10);
+    border-top: 1px solid rgba(59, 130, 246, 0.24);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.24);
+    padding: 8px 12px;
+}
+
+.item-table-input .item-section-row.jasa td {
+    background: rgba(16, 185, 129, 0.09);
+    border-top-color: rgba(16, 185, 129, 0.24);
+    border-bottom-color: rgba(16, 185, 129, 0.24);
+}
+
+.item-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.item-section-title strong {
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+}
+
+.item-section-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(59, 130, 246, 0.18);
+    color: #93c5fd;
+}
+
+.item-section-row.jasa .item-section-badge {
+    background: rgba(16, 185, 129, 0.16);
+    color: #6ee7b7;
+}
+
+.item-section-count {
+    margin-left: auto;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.item-table-input .item-section-add-cell {
+    padding: 8px 12px;
+}
+
+.btn-add-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: 1px dashed var(--border-subtle);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-add-inline:hover {
+    color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.item-section-empty {
+    margin-left: 10px;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}

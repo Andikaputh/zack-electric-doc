@@ -57,6 +57,28 @@ export default function InvoiceA4({ formData }) {
   const showSign = formData.signOption === 'both' || formData.signOption === 'sign_only' || formData.signOption === 'sign';
   const showStamp = formData.signOption === 'both' || formData.signOption === 'stamp_only' || formData.signOption === 'stamp';
 
+  // HIERARKI 3 LEVEL:
+  // Heading 1 = kategori (EQUIPMENT / JASA) -> kolom kanan sengaja dibiarkan kosong
+  // Heading 2 = item barang/jasa (baris bernomor seperti biasa)
+  // Subheading = rincian sub-komponen di bawah Heading 2
+  const CATEGORY_LABELS = { equipment: 'EQUIPMENT', jasa: 'JASA' };
+  const CATEGORY_ORDER = ['equipment', 'jasa'];
+  const normalizeCategory = (val) =>
+    String(val || '').toLowerCase() === 'jasa' ? 'jasa' : 'equipment';
+
+  // Urutan section dibuat sama dengan urutan section di form.
+  const itemSections = CATEGORY_ORDER
+    .map((key) => ({
+      key,
+      label: CATEGORY_LABELS[key],
+      items: (formData.items || []).filter(
+        (item) => normalizeCategory(item.category) === key
+      ),
+    }))
+    .filter((section) => section.items.length > 0);
+
+  let rowNumber = 0;
+
   return (
     <div id="invoiceSection" className="a4-page">
       {/* HEADER KOP SURAT INVOICE */}
@@ -159,123 +181,132 @@ export default function InvoiceA4({ formData }) {
             <th style={{ width: '18%' }}>Jumlah</th>
           </tr>
         </thead>
-        <tbody>
-          {(formData.items || []).map((item, index) => {
-            const q = parseNum(item.qty);
-            const p = parseNum(item.price);
-            const unitText = item.unit || 'Pcs';
-            const itemTotal = getItemTotal(item);
+        {itemSections.map((section) => (
+          <tbody key={section.key}>
+            {/* HEADING 1: KATEGORI (EQUIPMENT / JASA) — FULL WIDTH, HANYA BORDER KIRI & KANAN */}
+            <tr className="invoice-category-row">
+              <td colSpan={5}>{section.label}</td>
+            </tr>
 
-            return (
-              <tr key={item.id || index}>
-                {/* KOLOM NO */}
-                <td style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '8px' }}>
-                  {index + 1}.
-                </td>
+            {/* HEADING 2: ITEM BARANG / JASA */}
+            {section.items.map((item) => {
+              rowNumber += 1;
+              const q = parseNum(item.qty);
+              const p = parseNum(item.price);
+              const unitText = item.unit || 'Pcs';
+              const itemTotal = getItemTotal(item);
 
-                {/* KOLOM DESCRIPTION / KETERANGAN */}
-                <td style={{ padding: '8px', verticalAlign: 'top' }}>
-                  <div style={{ fontWeight: index === 0 ? 'bold' : 'normal', fontSize: '0.88rem' }}>
-                    {item.desc}
-                  </div>
+              return (
+                <tr key={item.id}>
+                  {/* KOLOM NO */}
+                  <td style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '8px' }}>
+                    {rowNumber}.
+                  </td>
 
-                  {/* RINCIAN SUB-KOMPONEN */}
-                  {Array.isArray(item.details) && item.details.length > 0 && (
-                    <div style={{ marginTop: '6px', paddingLeft: '20px' }}>
-                      {item.details.map((d, dIdx) => (
-                        <div
-                          key={dIdx}
-                          style={{
-                            fontSize: '0.82rem',
-                            lineHeight: '1.45',
-                            minHeight: '20px',
-                            marginBottom: '2px'
-                          }}
-                        >
-                          {typeof d === 'object' ? d.name : d}
-                        </div>
-                      ))}
+                  {/* KOLOM DESCRIPTION / KETERANGAN */}
+                  <td style={{ padding: '8px', verticalAlign: 'top' }}>
+                    <div style={{ fontSize: '0.88rem' }}>
+                      {item.desc}
                     </div>
-                  )}
-                </td>
 
-                {/* KOLOM QTY */}
-                <td style={{ padding: '8px', verticalAlign: 'top', textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.88rem', fontWeight: index === 0 ? 'bold' : 'normal' }}>
-                    {q} {unitText}
-                  </div>
-
-                  {/* QTY SUB-KOMPONEN SEJAJAR PRESISI */}
-                  {Array.isArray(item.details) && item.details.length > 0 && (
-                    <div style={{ marginTop: '6px' }}>
-                      {item.details.map((d, dIdx) => {
-                        const qtyStr = typeof d === 'object' ? `${d.qty} ${d.unit}` : '';
-                        return (
+                    {/* SUBHEADING: RINCIAN SUB-KOMPONEN */}
+                    {Array.isArray(item.details) && item.details.length > 0 && (
+                      <div style={{ marginTop: '6px', paddingLeft: '20px' }}>
+                        {item.details.map((d, dIdx) => (
                           <div
                             key={dIdx}
                             style={{
                               fontSize: '0.82rem',
                               lineHeight: '1.45',
                               minHeight: '20px',
-                              marginBottom: '2px',
-                              whiteSpace: 'nowrap'
+                              marginBottom: '2px'
                             }}
                           >
-                            {qtyStr}
+                            {typeof d === 'object' ? d.name : d}
                           </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </td>
-
-                {/* KOLOM HARGA SATUAN */}
-                <td style={{ padding: '8px', textAlign: p > 0 ? 'right' : 'center', verticalAlign: 'top' }}>
-                  <div style={{ fontSize: '0.88rem' }}>
-                    {p > 0 ? (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>Rp</span>
-                        <span>{formatRupiah(p)}</span>
+                        ))}
                       </div>
-                    ) : (
-                      '-'
                     )}
-                  </div>
+                  </td>
 
-                  {item.showSubPrices && Array.isArray(item.details) && item.details.length > 0 && (
-                    <div style={{ marginTop: '6px' }}>
-                      {item.details.map((d, dIdx) => {
-                        const subP = typeof d === 'object' ? parseNum(d.price) : 0;
-                        return (
-                          <div
-                            key={dIdx}
-                            style={{
-                              fontSize: '0.82rem',
-                              lineHeight: '1.45',
-                              minHeight: '20px',
-                              marginBottom: '2px',
-                              textAlign: 'right'
-                            }}
-                          >
-                            {subP > 0 ? `Rp ${formatRupiah(subP)}` : '-'}
-                          </div>
-                        );
-                      })}
+                  {/* KOLOM QTY */}
+                  <td style={{ padding: '8px', verticalAlign: 'top', textAlign: 'center' }}>
+                    <div style={{ fontSize: '0.88rem' }}>
+                      {q} {unitText}
                     </div>
-                  )}
-                </td>
 
-                {/* KOLOM JUMLAH */}
-                <td style={{ padding: '8px', textAlign: 'right', verticalAlign: 'top' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem' }}>
-                    <span>Rp</span>
-                    <span>{formatRupiah(itemTotal)}</span>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
+                    {/* QTY SUB-KOMPONEN SEJAJAR PRESISI */}
+                    {Array.isArray(item.details) && item.details.length > 0 && (
+                      <div style={{ marginTop: '6px' }}>
+                        {item.details.map((d, dIdx) => {
+                          const qtyStr = typeof d === 'object' ? `${d.qty} ${d.unit}` : '';
+                          return (
+                            <div
+                              key={dIdx}
+                              style={{
+                                fontSize: '0.82rem',
+                                lineHeight: '1.45',
+                                minHeight: '20px',
+                                marginBottom: '2px',
+                                whiteSpace: 'nowrap'
+                              }}
+                            >
+                              {qtyStr}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </td>
+
+                  {/* KOLOM HARGA SATUAN */}
+                  <td style={{ padding: '8px', textAlign: p > 0 ? 'right' : 'center', verticalAlign: 'top' }}>
+                    <div style={{ fontSize: '0.88rem' }}>
+                      {p > 0 ? (
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Rp</span>
+                          <span>{formatRupiah(p)}</span>
+                        </div>
+                      ) : (
+                        '-'
+                      )}
+                    </div>
+
+                    {item.showSubPrices && Array.isArray(item.details) && item.details.length > 0 && (
+                      <div style={{ marginTop: '6px' }}>
+                        {item.details.map((d, dIdx) => {
+                          const subP = typeof d === 'object' ? parseNum(d.price) : 0;
+                          return (
+                            <div
+                              key={dIdx}
+                              style={{
+                                fontSize: '0.82rem',
+                                lineHeight: '1.45',
+                                minHeight: '20px',
+                                marginBottom: '2px',
+                                textAlign: 'right'
+                              }}
+                            >
+                              {subP > 0 ? `Rp ${formatRupiah(subP)}` : '-'}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </td>
+
+                  {/* KOLOM JUMLAH */}
+                  <td style={{ padding: '8px', textAlign: 'right', verticalAlign: 'top' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem' }}>
+                      <span>Rp</span>
+                      <span>{formatRupiah(itemTotal)}</span>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        ))}
         <tfoot style={{ fontWeight: 'bold' }}>
           {/* SKENARIO 1: FULL PAYMENT */}
           {(isFullPayment || (discount === 0 && dp === 0)) && (

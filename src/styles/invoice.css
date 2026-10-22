@@ -15,6 +15,15 @@
 .invoice-table th { text-align: center; font-weight: bold; }
 .no-border-cell { border: none !important; background: transparent !important; }
 
+/* HEADING 1: KATEGORI EQUIPMENT / JASA */
+.invoice-table .invoice-category-row td {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #f2f2f2;
+    padding: 7px 8px;
+}
+
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .bold { font-weight: bold; }

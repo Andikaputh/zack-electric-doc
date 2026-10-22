@@ -46,6 +46,7 @@ export default function App() {
     items: [
       {
         id: 1,
+        category: 'equipment',
         desc: 'PANEL MDP 197.000 VA',
         qty: 1,
         unit: 'Set',
@@ -66,6 +67,7 @@ export default function App() {
       },
       {
         id: 2,
+        category: 'equipment',
         desc: 'Kabel Tufur NYY 4 x 95mm',
         qty: 3,
         unit: 'Meter',
@@ -75,6 +77,7 @@ export default function App() {
       },
       {
         id: 3,
+        category: 'jasa',
         desc: 'Jasa Pekerjaan Bongkar Panel Lama Dan Pemasangan Main Panel Listrik Baru, Rubah Konekan Panel',
         qty: 1,
         unit: 'Lot',
@@ -83,6 +86,7 @@ export default function App() {
       },
       {
         id: 4,
+        category: 'jasa',
         desc: 'Material Bantu, Perapihan, Setting dan Comisioning',
         qty: 1,
         unit: 'Is',
