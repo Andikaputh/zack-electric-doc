@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   FileText,
   Printer,
@@ -14,7 +14,58 @@ import PaperScale from './PaperScale';
 
 export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, onPrint }) {
   const [paperSize, setPaperSize] = useState('a4'); // 'a4' | 'letter' | 'f4'
-  const [zoom, setZoom] = useState(1); // 1 = fit to width
+  const [zoom, setZoom] = useState(1); // 1 = seluruh halaman pas di layar
+  const drawerBodyRef = useRef(null);
+  const [fitScale, setFitScale] = useState(null);
+
+  // Satu skala dipakai untuk semua halaman supaya lebar kertas konsisten.
+  const recalcPreviewScale = useCallback(() => {
+    const body = drawerBodyRef.current;
+    if (!body) return;
+
+    const papers = Array.from(body.querySelectorAll('.a4-page'));
+    if (!papers.length) return;
+
+    const maxPaperWidth = Math.max(...papers.map((paper) => paper.offsetWidth || 794));
+    const maxPaperHeight = Math.max(...papers.map((paper) => paper.offsetHeight || 1123));
+    const bodyStyle = window.getComputedStyle(body);
+    const paddingX =
+      (parseFloat(bodyStyle.paddingLeft) || 0) +
+      (parseFloat(bodyStyle.paddingRight) || 0);
+    const paddingY =
+      (parseFloat(bodyStyle.paddingTop) || 0) +
+      (parseFloat(bodyStyle.paddingBottom) || 0);
+    const availableWidth = body.clientWidth - paddingX - 8;
+    const availableHeight = body.clientHeight - paddingY - 20;
+
+    if (availableWidth <= 0 || availableHeight <= 0) return;
+
+    const nextScale = Math.min(
+      1,
+      availableWidth / maxPaperWidth,
+      availableHeight / maxPaperHeight,
+    );
+
+    setFitScale((current) => (Math.abs(current - nextScale) < 0.001 ? current : nextScale));
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!isOpen) return undefined;
+
+    const body = drawerBodyRef.current;
+    if (!body) return undefined;
+
+    const observer = new ResizeObserver(recalcPreviewScale);
+    observer.observe(body);
+    Array.from(body.querySelectorAll('.a4-page')).forEach((paper) => observer.observe(paper));
+
+    const raf = requestAnimationFrame(recalcPreviewScale);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [isOpen, docMode, paperSize, formData, recalcPreviewScale]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -135,15 +186,15 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
       </div>
 
       {/* BODY PREVIEW DENGAN CLASS DINAMIS SESUAI UKURAN KERTAS */}
-      <div className={`drawer-body print-area paper-${paperSize}`}>
+      <div ref={drawerBodyRef} className={`drawer-body print-area paper-${paperSize}`}>
         {docMode === 'quotation' && (
-          <PaperScale zoom={zoom}>
+          <PaperScale zoom={zoom} fitScale={fitScale}>
             <QuotationA4 formData={formData} />
           </PaperScale>
         )}
 
         {(docMode === 'both' || docMode === 'invoice') && (
-          <PaperScale zoom={zoom}>
+          <PaperScale zoom={zoom} fitScale={fitScale}>
             <InvoiceA4 formData={formData} />
           </PaperScale>
         )}
@@ -151,7 +202,7 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
         {docMode === 'both' && <div className="page-break" />}
 
         {(docMode === 'both' || docMode === 'kwitansi') && (
-          <PaperScale zoom={zoom}>
+          <PaperScale zoom={zoom} fitScale={fitScale}>
             <KwitansiA4 formData={formData} />
           </PaperScale>
         )}

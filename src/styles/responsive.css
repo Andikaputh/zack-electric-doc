@@ -93,6 +93,16 @@ textarea:focus-visible {
 /* --------------------------------------------------------------------------
    DRAWER PREVIEW: toolbar, zoom, dan skala kertas
    -------------------------------------------------------------------------- */
+.preview-drawer {
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+}
+
+.drawer-body {
+    min-height: 0;
+}
+
 .drawer-controls {
     order: 2;
     display: flex;
@@ -219,6 +229,7 @@ textarea:focus-visible {
 /* Skala kertas A4 di dalam drawer */
 .paper-scale {
     width: 100%;
+    flex: 0 0 auto;
     display: block;
     overflow-x: auto;
     overflow-y: hidden;

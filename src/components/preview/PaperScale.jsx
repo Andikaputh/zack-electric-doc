@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
- * Menampilkan kertas A4 (atau ukuran lain) dengan skala otomatis agar selalu
- * pas di lebar area preview. `zoom` > 1 akan memperbesar kertas dan membuat
- * area preview bisa digeser (scroll) ke samping.
+ * Menampilkan kertas (A4/Letter/F4) dengan skala otomatis agar SELURUH halaman
+ * selalu terlihat di area preview — lebar dan tinggi ikut menyesuaikan.
+ * `zoom` > 1 akan memperbesar kertas dan membuat area preview bisa digeser.
  */
-export default function PaperScale({ zoom = 1, children }) {
+export default function PaperScale({ zoom = 1, fitScale, children }) {
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
   const [scale, setScale] = useState(1);
@@ -20,14 +20,36 @@ export default function PaperScale({ zoom = 1, children }) {
     const paperEl = inner.firstElementChild;
     const paperWidth = paperEl?.offsetWidth || 794;
     const paperHeight = paperEl?.offsetHeight || 1123;
-    const available = viewport.clientWidth - 8;
+    const availableWidth = viewport.clientWidth - 8;
 
-    if (available <= 0) return;
+    // Tinggi yang tersedia diambil dari area scroll drawer, supaya satu
+    // lembar kertas utuh (tidak terpotong) terlihat di layar.
+    const drawerBody = viewport.closest('.drawer-body');
+    let availableHeight = 0;
+    if (drawerBody) {
+      const drawerStyle = window.getComputedStyle(drawerBody);
+      const paddingY =
+        (parseFloat(drawerStyle.paddingTop) || 0) +
+        (parseFloat(drawerStyle.paddingBottom) || 0);
+      availableHeight = drawerBody.clientHeight - paddingY - 20;
+    }
+    if (!availableHeight || availableHeight < 0) {
+      availableHeight = window.innerHeight - 160;
+    }
 
-    setContainerWidth(available);
+    if (availableWidth <= 0 || availableHeight <= 0) return;
+
+    const fallbackFit = Math.min(
+      1,
+      availableWidth / paperWidth,
+      availableHeight / paperHeight,
+    );
+    const activeFit = Number.isFinite(fitScale) ? fitScale : fallbackFit;
+
+    setContainerWidth(availableWidth);
     setPaper({ width: paperWidth, height: paperHeight });
-    setScale(Math.min(1, available / paperWidth) * zoom);
-  }, [zoom]);
+    setScale(activeFit * zoom);
+  }, [zoom, fitScale]);
 
   useEffect(() => {
     recalc();
@@ -35,11 +57,13 @@ export default function PaperScale({ zoom = 1, children }) {
     const viewport = viewportRef.current;
     const inner = innerRef.current;
     const paperEl = inner?.firstElementChild;
+    const drawerBody = viewport?.closest('.drawer-body');
     if (!viewport) return undefined;
 
     const observer = new ResizeObserver(recalc);
     observer.observe(viewport);
     if (paperEl) observer.observe(paperEl);
+    if (drawerBody) observer.observe(drawerBody);
 
     window.addEventListener('resize', recalc);
     return () => {
