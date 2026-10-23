@@ -12,14 +12,25 @@ import KwitansiA4 from './KwitansiA4';
 import QuotationA4 from './QuotationA4';
 import PaperScale from './PaperScale';
 
+const PAPER_HEIGHT_MM = {
+  a4: 297,
+  letter: 279.4,
+  f4: 330,
+};
+
 export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, onPrint }) {
   const [paperSize, setPaperSize] = useState('a4'); // 'a4' | 'letter' | 'f4'
   const [zoom, setZoom] = useState(1); // 1 = seluruh halaman pas di layar
   const drawerBodyRef = useRef(null);
   const [fitScale, setFitScale] = useState(null);
+  const [printScale, setPrintScale] = useState(1);
 
   // Satu skala dipakai untuk semua halaman supaya lebar kertas konsisten.
   const recalcPreviewScale = useCallback(() => {
+    // Jangan hitung ulang saat mode print aktif: ukuran print sudah memakai
+    // --print-scale yang dihitung dari tampilan layar.
+    if (window.matchMedia('print').matches) return;
+
     const body = drawerBodyRef.current;
     if (!body) return;
 
@@ -28,6 +39,20 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
 
     const maxPaperWidth = Math.max(...papers.map((paper) => paper.offsetWidth || 794));
     const maxPaperHeight = Math.max(...papers.map((paper) => paper.offsetHeight || 1123));
+    const contentHeights = papers.map((paper) => {
+      const paperStyle = window.getComputedStyle(paper);
+      const paddingY =
+        (parseFloat(paperStyle.paddingTop) || 0) +
+        (parseFloat(paperStyle.paddingBottom) || 0);
+      return Math.max(0, paper.offsetHeight - paddingY);
+    });
+    const maxContentHeight = Math.max(...contentHeights);
+    const maxContentHeightMm = (maxContentHeight * 25.4) / 96;
+    const availablePrintHeightMm = (PAPER_HEIGHT_MM[paperSize] || 297) - 20 - 4;
+    const nextPrintScale =
+      maxContentHeightMm > 0
+        ? Math.min(1, availablePrintHeightMm / maxContentHeightMm)
+        : 1;
     const bodyStyle = window.getComputedStyle(body);
     const paddingX =
       (parseFloat(bodyStyle.paddingLeft) || 0) +
@@ -47,7 +72,10 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
     );
 
     setFitScale((current) => (Math.abs(current - nextScale) < 0.001 ? current : nextScale));
-  }, []);
+    setPrintScale((current) =>
+      Math.abs(current - nextPrintScale) < 0.001 ? current : nextPrintScale,
+    );
+  }, [paperSize]);
 
   useLayoutEffect(() => {
     if (!isOpen) return undefined;
@@ -58,6 +86,10 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
     const observer = new ResizeObserver(recalcPreviewScale);
     observer.observe(body);
     Array.from(body.querySelectorAll('.a4-page')).forEach((paper) => observer.observe(paper));
+
+    // Hitung langsung saat mount supaya skala sudah benar walau tab sedang
+    // tidak aktif (requestAnimationFrame bisa tertunda di background tab).
+    recalcPreviewScale();
 
     const raf = requestAnimationFrame(recalcPreviewScale);
 
@@ -86,23 +118,10 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
 
   if (!isOpen) return null;
 
-  // Tangani cetak dengan mengatur ukuran kertas printer secara instan
+  // Pastikan skala print sudah dihitung sebelum dialog cetak dibuka.
   const handlePrintDocument = () => {
-    let pageCss = 'A4 portrait';
-    if (paperSize === 'letter') pageCss = 'letter portrait';
-    if (paperSize === 'f4') pageCss = '215mm 330mm'; // Ukuran resmi F4 / Folio
-
-    const style = document.createElement('style');
-    style.id = 'dynamic-page-size';
-    style.innerHTML = `@page { size: ${pageCss}; margin: 0; }`;
-    document.head.appendChild(style);
-
+    recalcPreviewScale();
     onPrint();
-
-    setTimeout(() => {
-      const existing = document.getElementById('dynamic-page-size');
-      if (existing) existing.remove();
-    }, 1000);
   };
 
   const zoomIn = () => setZoom((prev) => Math.min(3, Number((prev + 0.25).toFixed(2))));
@@ -186,7 +205,12 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
       </div>
 
       {/* BODY PREVIEW DENGAN CLASS DINAMIS SESUAI UKURAN KERTAS */}
-      <div ref={drawerBodyRef} className={`drawer-body print-area paper-${paperSize}`}>
+      <div
+        ref={drawerBodyRef}
+        className={`drawer-body print-area paper-${paperSize}`}
+        data-paper-size={paperSize}
+        style={{ '--print-scale': printScale }}
+      >
         {docMode === 'quotation' && (
           <PaperScale zoom={zoom} fitScale={fitScale}>
             <QuotationA4 formData={formData} />

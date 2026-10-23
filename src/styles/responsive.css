@@ -984,12 +984,20 @@ textarea:focus-visible {
 }
 
 /* --------------------------------------------------------------------------
-   PRINT: batalkan semua transformasi skala preview
+   PRINT: satu lembar penuh, ukurannya mengikuti pilihan kertas
    -------------------------------------------------------------------------- */
 @media print {
+    @page {
+        margin: 0;
+    }
+
     .drawer-controls,
     .zoom-control,
     .paper-size-control {
+        display: none !important;
+    }
+
+    .page-break {
         display: none !important;
     }
 
@@ -1017,5 +1025,33 @@ textarea:focus-visible {
     .paper-scale-inner>#kwitansiSection,
     .paper-scale-inner>#quotationSection {
         margin: 0 !important;
+    }
+
+    /* Isi dokumen diskalakan agar selalu pas satu halaman, tanpa memotong
+       tanda tangan atau menambah halaman baru. */
+    .a4-page,
+    #invoiceSection,
+    #kwitansiSection,
+    #quotationSection {
+        width: calc(var(--paper-width, 210mm) / var(--print-scale, 1)) !important;
+        min-height: 0 !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: calc(10mm / var(--print-scale, 1)) calc(12mm / var(--print-scale, 1)) !important;
+        box-sizing: border-box !important;
+        page-break-after: auto !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        zoom: var(--print-scale, 1);
+    }
+
+    .paper-scale:not(:last-child) {
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .paper-scale:last-child {
+        break-after: auto;
+        page-break-after: auto;
     }
 }

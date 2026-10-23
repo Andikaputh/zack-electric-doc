@@ -138,11 +138,32 @@ export default function App() {
     document.title = dynamicPdfName;
 
     setTimeout(() => {
-      window.print();
-      setTimeout(() => {
+      // Baca ukuran kertas dari drawer yang sedang terbuka supaya dialog cetak
+      // memakai ukuran yang sama dengan live preview (A4 / Letter / F4).
+      const selectedPaper =
+        document.querySelector('.drawer-body')?.dataset.paperSize || 'a4';
+      let pageCss = 'A4 portrait';
+      if (selectedPaper === 'letter') pageCss = 'letter portrait';
+      if (selectedPaper === 'f4') pageCss = '215mm 330mm';
+
+      const existingStyle = document.getElementById('dynamic-page-size');
+      if (existingStyle) existingStyle.remove();
+
+      const pageStyle = document.createElement('style');
+      pageStyle.id = 'dynamic-page-size';
+      pageStyle.textContent = `@page { size: ${pageCss}; margin: 0; }`;
+      document.head.appendChild(pageStyle);
+
+      const cleanup = () => {
         document.title = originalTitle;
-      }, 1000);
-    }, 150);
+        pageStyle.remove();
+        window.removeEventListener('afterprint', cleanup);
+      };
+
+      window.addEventListener('afterprint', cleanup);
+      setTimeout(cleanup, 3000);
+      window.print();
+    }, 300);
   };
 
   const handleSelectCustomerFromModal = (cust) => {
