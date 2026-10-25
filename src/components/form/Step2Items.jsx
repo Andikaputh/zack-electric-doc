@@ -7,6 +7,8 @@ const CATEGORY_SECTIONS = [
   { key: 'jasa', label: 'Jasa' },
 ];
 
+const UNIT_OPTIONS = ['Pcs', 'Buah', 'Set', 'Unit', 'Meter', 'Lot', 'Roll', 'Box', 'Paket', 'Ls'];
+
 const normalizeCategory = (val) =>
   String(val || '').toLowerCase() === 'jasa' ? 'jasa' : 'equipment';
 
@@ -25,7 +27,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
       ...prev,
       items: [
         ...prev.items,
-        { id: Date.now(), category, desc: '', qty: 1, unit: 'Pcs', price: 0, showSubPrices: false, details: [] },
+        { id: Date.now(), category, desc: '', qty: 1, unit: '', price: 0, showSubPrices: false, details: [] },
       ],
     }));
   };
@@ -47,7 +49,7 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
           const currentDetails = item.details || [];
           const updatedDetails = [
             ...currentDetails,
-            { name: '', qty: 1, unit: 'Buah', price: 0 },
+            { name: '', qty: 1, unit: '', price: 0 },
           ];
           return { ...item, details: updatedDetails };
         }
@@ -186,7 +188,11 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
                     type="text"
                     className="sub-input sub-unit"
                     placeholder="Satuan"
-                    value={detailObj.unit || 'Buah'}
+                    list="item-unit-options"
+                    required
+                    pattern=".*\\S.*"
+                    aria-label="Satuan sub-komponen"
+                    value={detailObj.unit ?? ''}
                     onChange={(e) => handleSubDetailChange(item.id, dIdx, 'unit', e.target.value)}
                     style={{ width: '65px', fontSize: '0.8rem', padding: '4px 6px' }}
                   />
@@ -265,7 +271,11 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
           <input
             type="text"
             placeholder="Meter/Lot/Set/Buah"
-            value={item.unit || 'Pcs'}
+            list="item-unit-options"
+            required
+            pattern=".*\\S.*"
+            aria-label="Satuan item"
+            value={item.unit ?? ''}
             onChange={(e) => handleItemChange(item.id, 'unit', e.target.value)}
           />
         </td>
@@ -307,7 +317,10 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
   };
 
   return (
-    <div className="card-panel">
+    <form className="card-panel" onSubmit={(event) => { event.preventDefault(); onNext(); }}>
+      <datalist id="item-unit-options">
+        {UNIT_OPTIONS.map((unit) => <option key={unit} value={unit} />)}
+      </datalist>
       <div className="card-header">
         <div className="card-header-title">
           <Package size={18} />
@@ -385,10 +398,10 @@ export default function Step2Items({ formData, setFormData, onNext, onPrev }) {
         <button type="button" className="btn-step-nav prev" onClick={onPrev}>
           ← Kembali
         </button>
-        <button type="button" className="btn-step-nav next" onClick={onNext}>
+        <button type="submit" className="btn-step-nav next">
           Lanjut: Pembayaran & TTD →
         </button>
       </div>
-    </div>
+    </form>
   );
 }

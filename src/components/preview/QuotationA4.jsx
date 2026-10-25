@@ -154,7 +154,7 @@ export default function QuotationA4({ formData }) {
           {(formData.items || []).map((item, index) => {
             const q = parseNum(item.qty);
             const p = parseNum(item.price);
-            const unitText = item.unit || 'Pcs';
+            const unitText = item.unit ?? '';
             const itemTotal = getItemTotal(item);
 
             return (

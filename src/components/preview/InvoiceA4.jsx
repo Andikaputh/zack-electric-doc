@@ -193,7 +193,7 @@ export default function InvoiceA4({ formData }) {
               rowNumber += 1;
               const q = parseNum(item.qty);
               const p = parseNum(item.price);
-              const unitText = item.unit || 'Pcs';
+              const unitText = item.unit ?? '';
               const itemTotal = getItemTotal(item);
 
               return (

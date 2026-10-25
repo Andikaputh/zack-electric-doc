@@ -115,7 +115,27 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  const validateUnits = () => {
+    const hasEmptyUnit = formData.items.some((item) =>
+      !String(item.unit ?? '').trim() || (item.details || []).some((detail) =>
+        typeof detail === 'object' && !String(detail.unit ?? '').trim()
+      )
+    );
+    if (hasEmptyUnit) {
+      setCurrentStep(2);
+      window.alert('Satuan item dan sub-komponen wajib diisi. Pilih saran atau ketik satuan sendiri.');
+      return false;
+    }
+    return true;
+  };
+
+  const handleStepChange = (step) => {
+    if (step > 2 && !validateUnits()) return;
+    setCurrentStep(step);
+  };
+
   const handlePrint = () => {
+    if (!validateUnits()) return;
     setIsPreviewOpen(true);
 
     const year = formData.date ? formData.date.split('-')[0] : new Date().getFullYear();
@@ -194,7 +214,7 @@ export default function App() {
           />
 
           <main className="workspace-area no-print">
-            <StepperNav currentStep={currentStep} setCurrentStep={setCurrentStep} />
+            <StepperNav currentStep={currentStep} setCurrentStep={handleStepChange} />
 
             {currentStep === 1 && (
               <Step1Metadata
@@ -209,7 +229,7 @@ export default function App() {
               <Step2Items
                 formData={formData}
                 setFormData={setFormData}
-                onNext={() => setCurrentStep(3)}
+                onNext={() => handleStepChange(3)}
                 onPrev={() => setCurrentStep(1)}
               />
             )}
