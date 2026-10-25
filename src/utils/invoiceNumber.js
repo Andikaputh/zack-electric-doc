@@ -1,20 +1,10 @@
 import { getCustomerDatabase } from './customerDb';
+export { formatDateIndonesia } from './formatters';
 
 // KONVERSI ANGKA BULAN KE ROMAWI
 export function toRomanMonth(monthIndex) {
   const romanMonths = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
   return romanMonths[monthIndex] || "I";
-}
-
-// FORMAT TANGGAL INDONESIA (Contoh: 22 Mei 2026)
-export function formatDateIndonesia(dateObj) {
-  if (!dateObj) return '';
-  const date = typeof dateObj === 'string' ? new Date(dateObj) : dateObj;
-  const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  return `${day} ${month} ${year}`;
 }
 
 // GENERATE OTOMATIS NOMOR INVOICE

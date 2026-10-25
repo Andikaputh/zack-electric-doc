@@ -1,4 +1,4 @@
-import { formatRupiah } from '../../utils/formatters';
+import { formatDateIndonesia, formatRupiah } from '../../utils/formatters';
 import capImg from '../../assets/cap.png';
 import ttdImg from '../../assets/ttd.png';
 import '../../styles/quotation.css';
@@ -8,18 +8,6 @@ export default function QuotationA4({ formData }) {
     if (!val || val === '-') return 0;
     const num = Number(val);
     return isNaN(num) ? 0 : num;
-  };
-
-  const formatDateIndo = (dateStr) => {
-    if (!dateStr) return '';
-    const dateObj = new Date(dateStr);
-    if (isNaN(dateObj.getTime())) return dateStr;
-    
-    const months = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-    ];
-    return `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
   };
 
   const getItemTotal = (item) => {
@@ -137,7 +125,7 @@ export default function QuotationA4({ formData }) {
               <tr>
                 <td style={{ verticalAlign: 'top', padding: '2px 0' }}>Tanggal</td>
                 <td style={{ verticalAlign: 'top', padding: '2px 0', textAlign: 'center' }}>:</td>
-                <td style={{ verticalAlign: 'top', padding: '2px 0' }}>{formatDateIndo(formData.date)}</td>
+                <td style={{ verticalAlign: 'top', padding: '2px 0' }}>{formatDateIndonesia(formData.date)}</td>
               </tr>
             </tbody>
           </table>

@@ -1,4 +1,4 @@
-import { formatRupiah } from '../../utils/formatters';
+import { formatDateIndonesia, formatRupiah } from '../../utils/formatters';
 import { terbilang } from '../../utils/terbilang';
 import logoImg from '../../assets/logo.png';
 import capImg from '../../assets/cap.png';
@@ -128,7 +128,7 @@ export default function KwitansiA4({ formData }) {
         </div>
 
         <div className="kwitansi-sign">
-          <span>{formData.city || 'Jakarta'}</span>, <span>{formData.date}</span><br />
+          <span>{formData.city || 'Jakarta'}</span>, <span>{formatDateIndonesia(formData.date)}</span><br />
           <strong style={{ fontStyle: 'normal' }}>Zack Electric</strong>
           <div className="signature-space">
             {showStamp && <img src={capImg} className="img-stamp" alt="Cap Zack Electric" />}

@@ -217,17 +217,17 @@ export default function LivePreviewDrawer({ isOpen, onClose, formData, docMode, 
           </PaperScale>
         )}
 
-        {(docMode === 'both' || docMode === 'invoice') && (
+        {(docMode === 'both' || docMode === 'kwitansi') && (
           <PaperScale zoom={zoom} fitScale={fitScale}>
-            <InvoiceA4 formData={formData} />
+            <KwitansiA4 formData={formData} />
           </PaperScale>
         )}
 
         {docMode === 'both' && <div className="page-break" />}
 
-        {(docMode === 'both' || docMode === 'kwitansi') && (
+        {(docMode === 'both' || docMode === 'invoice') && (
           <PaperScale zoom={zoom} fitScale={fitScale}>
-            <KwitansiA4 formData={formData} />
+            <InvoiceA4 formData={formData} />
           </PaperScale>
         )}
       </div>

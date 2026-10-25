@@ -1,4 +1,4 @@
-import { formatRupiah } from '../../utils/formatters';
+import { formatDateIndonesia, formatRupiah } from '../../utils/formatters';
 import { terbilang } from '../../utils/terbilang';
 import logoImg from '../../assets/logo.png';
 import capImg from '../../assets/cap.png';
@@ -160,7 +160,7 @@ export default function InvoiceA4({ formData }) {
               <tr>
                 <td style={{ verticalAlign: 'top', padding: '2px 0' }}>Tanggal</td>
                 <td style={{ verticalAlign: 'top', padding: '2px 0', textAlign: 'center' }}>:</td>
-                <td style={{ verticalAlign: 'top', padding: '2px 0' }}>{formData.date}</td>
+                <td style={{ verticalAlign: 'top', padding: '2px 0' }}>{formatDateIndonesia(formData.date)}</td>
               </tr>
             </tbody>
           </table>

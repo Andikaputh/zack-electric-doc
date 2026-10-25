@@ -3,15 +3,24 @@ export const formatRupiah = (number) => {
   return new Intl.NumberFormat('id-ID').format(number || 0);
 };
 
-// Format Tanggal Indonesia (misal: 2026-10-12 -> 12 Oktober 2026)
+// Format tanggal menjadi date-month-year (misal: 2026-10-12 -> 12-10-2026)
 export const formatDateIndonesia = (dateString) => {
   if (!dateString) return '';
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(date);
+
+  // Input dari <input type="date"> berbentuk YYYY-MM-DD. Memecah string secara
+  // langsung mencegah tanggal bergeser karena konversi zona waktu oleh Date.
+  const isoDateMatch = String(dateString).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoDateMatch) {
+    const [, year, month, day] = isoDateMatch;
+    return `${day}-${month}-${year}`;
+  }
+
+  const date = dateString instanceof Date ? dateString : new Date(dateString);
+  if (Number.isNaN(date.getTime())) return String(dateString);
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  return `${day}-${month}-${date.getFullYear()}`;
 };
 
 // Memformat angka dengan pemisah ribuan titik (contoh: 26500000 -> "26.500.000")
